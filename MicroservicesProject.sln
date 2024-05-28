@@ -22,6 +22,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer", "IdentityS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeCourse.IdentityServer", "IdentityServer\FreeCourse.IdentityServer\FreeCourse.IdentityServer.csproj", "{EB86A5FF-A3AF-4B76-B231-12F0D4411212}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PhotoStock", "PhotoStock", "{F9BA461B-6BBC-4A06-B6CB-087BE2F7A4FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeCourse.Services.PhotoStock.API", "Services\PhotoStock\FreeCourse.Services.PhotoStock.API\FreeCourse.Services.PhotoStock.API.csproj", "{98EED139-6053-4320-A1FD-2B365480B6D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +44,10 @@ Global
 		{EB86A5FF-A3AF-4B76-B231-12F0D4411212}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB86A5FF-A3AF-4B76-B231-12F0D4411212}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB86A5FF-A3AF-4B76-B231-12F0D4411212}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98EED139-6053-4320-A1FD-2B365480B6D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EED139-6053-4320-A1FD-2B365480B6D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EED139-6053-4320-A1FD-2B365480B6D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EED139-6053-4320-A1FD-2B365480B6D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +57,8 @@ Global
 		{D4FCC60F-7866-42FD-B450-2F71970A3C70} = {5A76BDAF-7ACB-4B5C-B4FF-EF6D51D6DF8F}
 		{399BC887-5256-4F00-9CF0-1D4E650B84F7} = {0C85E5C2-2333-4794-B46F-FCA219A03A81}
 		{EB86A5FF-A3AF-4B76-B231-12F0D4411212} = {A8D1FC7A-39EB-466A-843D-3EE0AC06D240}
+		{F9BA461B-6BBC-4A06-B6CB-087BE2F7A4FC} = {9D2BB6E0-27D2-4110-AFCB-B394BE5BEFCA}
+		{98EED139-6053-4320-A1FD-2B365480B6D7} = {F9BA461B-6BBC-4A06-B6CB-087BE2F7A4FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CAE9FD0D-E6EB-4EFD-B5D7-9A8BE0BF8B7D}

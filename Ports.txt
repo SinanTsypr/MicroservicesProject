@@ -1,2 +1,6 @@
 Services
 	-Catalog.API => http://localhost:5011
+	-PhotoStock.API => http://localhost:5012
+
+IdentityServer
+	-IdentityServer => http://localhost:5001
