@@ -8,11 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\photos\" />
   </ItemGroup>
 
   <ItemGroup>
