@@ -10,8 +10,6 @@ namespace FreeCourse.Services.PhotoStock.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             //Her controllor için authorize ekledik
             builder.Services.AddControllers(option =>
             {
@@ -31,7 +29,6 @@ namespace FreeCourse.Services.PhotoStock.API
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
