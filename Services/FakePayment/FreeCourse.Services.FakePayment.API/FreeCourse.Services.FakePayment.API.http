@@ -1,0 +1,6 @@
+@FreeCourse.Services.FakePayment.API_HostAddress = http://localhost:5228
+
+GET {{FreeCourse.Services.FakePayment.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
