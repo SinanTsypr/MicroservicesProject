@@ -18,7 +18,7 @@ namespace FreeCourse.Services.Catalog.API.Models
 
         public string UserId { get; set; } = null!;
 
-        public string Picture { get; set; } = null!;
+        public string? Picture { get; set; } = null!;
 
         [BsonRepresentation(BsonType.DateTime)]
         public DateTime CreateTime { get; set; }

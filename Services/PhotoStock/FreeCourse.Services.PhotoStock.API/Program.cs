@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Extensions.FileProviders;
 
 namespace FreeCourse.Services.PhotoStock.API
 {
@@ -35,6 +36,7 @@ namespace FreeCourse.Services.PhotoStock.API
                 app.UseSwaggerUI();
             }
 
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
 

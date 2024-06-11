@@ -1,3 +1,6 @@
+Frontends
+	-Web => http://localhost:5010
+
 Services
 	-Catalog.API => http://localhost:5011
 	-PhotoStock.API => http://localhost:5012
