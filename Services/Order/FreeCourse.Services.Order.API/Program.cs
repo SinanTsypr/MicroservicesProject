@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.Reflection;
+using MassTransit;
+using FreeCourse.Services.Order.Application.Consumers;
 
 namespace FreeCourse.Services.Order.API
 {
@@ -15,6 +17,29 @@ namespace FreeCourse.Services.Order.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            //Masstransit - RabbitMQ(port: 5672, management-port:15672)
+            builder.Services.AddMassTransit(x =>
+            {
+                x.AddConsumer<CreateOrderMessageCommandConsumer>();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(builder.Configuration["RabbitMQUrl"], "/", host =>
+                    {
+                        host.Username("guest");
+                        host.Password("guest");
+                    });
+
+                    cfg.ReceiveEndpoint("creat-order-service", e =>
+                    {
+                        e.ConfigureConsumer<CreateOrderMessageCommandConsumer>(context);
+                    });
+                });
+            });
+            //Masstransit v8 sonrasý için ayrý olarak çaðýrmaya gerek kalmadý
+            //https://github.com/MassTransit/MassTransit/discussions/3051
+            //https://code-maze.com/masstransit-rabbitmq-aspnetcore/
+            //builder.Services.AddMassTransitHostedService();
 
             builder.Services.AddDbContext<OrderDbContext>(opt =>
             {

@@ -1,0 +1,51 @@
+﻿@model List<OrderViewModel>
+
+@{
+    ViewData["Title"] = "CheckoutHistory";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ödeme Geçmişim</h5>
+                @if (Model.Any())
+                {
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Sipariş(Ödeme) No</th>
+                            <th>Satın Alma Tarihi</th>
+                            <th>Detaylar</th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.CreatedDate.ToShortDateString()</td>
+                                <td>
+                                    <table class="table table-striped">
+                                        <tr>
+                                            <td>Kurs İsmi</td>
+                                            <td>Kurs Fiyatı</td>
+                                        </tr>
+                                        @foreach (var course in item.OrderItems)
+                                        {
+                                            <tr>
+                                                <td>@course.ProductName</td>
+                                                <td>@course.Price.ToString("0.00") TL</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <div class="alert alert-info">Satın aldığınız bir kurs bulunmamaktadır</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
