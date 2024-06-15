@@ -2,6 +2,7 @@
 using FreeCourse.Services.Catalog.API.Dtos.Category;
 using FreeCourse.Services.Catalog.API.Services;
 using FreeCourse.Services.Catalog.API.Settings;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
@@ -13,6 +14,23 @@ namespace FreeCourse.Services.Catalog.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            //Masstransit - RabbitMQ(port: 5672, management-port:15672)
+            builder.Services.AddMassTransit(x =>
+            {
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(builder.Configuration["RabbitMQUrl"], "/", host =>
+                    {
+                        host.Username("guest");
+                        host.Password("guest");
+                    });
+                });
+            });
+            //Masstransit v8 sonrasý için ayrý olarak çaðýrmaya gerek kalmadý
+            //https://github.com/MassTransit/MassTransit/discussions/3051
+            //https://code-maze.com/masstransit-rabbitmq-aspnetcore/
+            //builder.Services.AddMassTransitHostedService();
 
             //AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));

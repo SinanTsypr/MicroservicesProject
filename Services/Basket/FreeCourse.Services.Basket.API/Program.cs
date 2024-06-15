@@ -1,7 +1,9 @@
 
+using FreeCourse.Services.Basket.API.Consumers;
 using FreeCourse.Services.Basket.API.Services;
 using FreeCourse.Services.Basket.API.Settings;
 using FreeCourse.Shared.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -16,6 +18,29 @@ namespace FreeCourse.Services.Basket.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            //Masstransit - RabbitMQ(port: 5672, management-port:15672)
+            builder.Services.AddMassTransit(x =>
+            {
+                x.AddConsumer<CourseNameChangedEventConsumer>();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(builder.Configuration["RabbitMQUrl"], "/", host =>
+                    {
+                        host.Username("guest");
+                        host.Password("guest");
+                    });
+
+                    cfg.ReceiveEndpoint("course-name-changed-event-basket-service", e =>
+                    {
+                        e.ConfigureConsumer<CourseNameChangedEventConsumer>(context);
+                    });
+                });
+            });
+            //Masstransit v8 sonrasý için ayrý olarak çaðýrmaya gerek kalmadý
+            //https://github.com/MassTransit/MassTransit/discussions/3051
+            //https://code-maze.com/masstransit-rabbitmq-aspnetcore/
+            //builder.Services.AddMassTransitHostedService();
 
             //Options Pattern
             builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection("RedisSettings"));
