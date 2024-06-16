@@ -37,8 +37,9 @@ internal static class HostingExtensions
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
             .AddAspNetIdentity<ApplicationUser>()
-            .AddResourceOwnerValidator<IdentityResourceOwnerPasswordValidator>();
-        
+            .AddResourceOwnerValidator<IdentityResourceOwnerPasswordValidator>()
+            .AddExtensionGrantValidator<TokenExchangeExtensionGrantValidator>();
+
         builder.Services.AddAuthentication()
             .AddGoogle(options =>
             {
@@ -53,24 +54,22 @@ internal static class HostingExtensions
 
         return builder.Build();
     }
-    
+
     public static WebApplication ConfigurePipeline(this WebApplication app)
-    { 
+    {
         app.UseSerilogRequestLogging();
-    
+
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
-
-
 
         app.UseStaticFiles();
         app.UseRouting();
         app.UseIdentityServer();
         app.UseAuthentication();
         app.UseAuthorization();
-        
+
         app.MapRazorPages()
             .RequireAuthorization();
 

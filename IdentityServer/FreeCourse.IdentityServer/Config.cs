@@ -16,7 +16,7 @@ public static class Config
         new ApiResource("resource_gateway"){Scopes={ "gateway_fullpermission" } },
         new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
     };
-                                      
+
     public static IEnumerable<IdentityResource> IdentityResources =>
         new IdentityResource[]
         {
@@ -48,7 +48,7 @@ public static class Config
                 ClientId = "WebMvcClient",
                 ClientSecrets = { new Secret("secret".Sha256())},
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                AllowedScopes={"catalog_fullpermission", 
+                AllowedScopes={"catalog_fullpermission",
                                "photo_stock_fullpermission",
                                "gateway_fullpermission",
                                IdentityServerConstants.LocalApi.ScopeName }
@@ -62,13 +62,11 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 AllowedScopes={
                     "basket_fullpermission",
-                    "discount_fullpermission",
                     "order_fullpermission",
-                    "fakepayment_fullpermission",
                     "gateway_fullpermission",
-                    IdentityServerConstants.StandardScopes.Email, 
-                    IdentityServerConstants.StandardScopes.OpenId, 
-                    IdentityServerConstants.StandardScopes.Profile, 
+                    IdentityServerConstants.StandardScopes.Email,
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.OfflineAccess,
                     IdentityServerConstants.LocalApi.ScopeName,
                     "roles",
@@ -77,6 +75,19 @@ public static class Config
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AbsoluteRefreshTokenLifetime = (int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
                 RefreshTokenUsage = TokenUsage.ReUse
+            },
+            new Client
+            {
+                ClientName = "Token Exchange Client",
+                ClientId = "TokenExchangeClient",
+                ClientSecrets = { new Secret("secret".Sha256())},
+                AllowedGrantTypes = new [] {"urn:ietf:params:oauth:grant-type:token-exchange" },
+                AllowedScopes=
+                {
+                    "discount_fullpermission",
+                    "fakepayment_fullpermission",
+                    IdentityServerConstants.StandardScopes.OpenId,
+                }
             }
         };
 }
