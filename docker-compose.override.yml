@@ -1,0 +1,64 @@
+version: "3.8"
+services:
+  catalogdb:
+    container_name: catalogdb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - catalogdb_volume:/data/db
+
+  basketdb:
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6379:6379"
+
+  discount:
+    container_name: discountdb
+    restart: always
+    ports:
+      - "5433:5432"
+    volumes:
+      - discountdb_volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=Password123!
+      - POSTGRES_DB=discountdb
+
+  identitydb:
+    container_name: identitydb
+    restart: always
+    ports:
+      - "1434:1433"
+    volumes:
+      - identitydb_volume:/var/opt/mssql
+
+  orderdb:
+    ports:
+      - "1435:1433"
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  catalog.api:
+    container_name: catalog.api
+    environment:
+      DatabaseSettings__ConnectionString: "mongodb://catalogdb:27017"
+      ASPNETCORE_ENVIRONMENT: Development
+      RabbitMQUrl: rabbitmq
+      IdentityServerURL: http://identityserver.api:5001
+    ports:
+      - "5011:8080"
+    depends_on:
+      - catalogdb
+
+  identityserver.api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    ports:
+      - "5001:8080"

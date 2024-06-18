@@ -1,6 +1,7 @@
 ﻿using FreeCourse.IdentityServer;
 using FreeCourse.IdentityServer.Data;
 using FreeCourse.IdentityServer.Models;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -24,6 +25,10 @@ try
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
     builder.Services.AddLocalApiAuthentication();
+
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo(@"/root/.aspnet/DataProtection-Keys"))
+        .SetApplicationName("FreeCourse.IdentityServer");
 
     var app = builder
         .ConfigureServices()

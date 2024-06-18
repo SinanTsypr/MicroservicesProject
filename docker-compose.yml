@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+  catalogdb:
+    image: mongo
+
+  basketdb:
+    image: redis
+
+  discount:
+    image: postgres
+
+  identitydb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: identitydb
+    environment:
+      SA_PASSWORD: "Password123!"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - identitydb_volume:/var/opt/mssql
+    ports:
+      - "1434:1433"
+
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: orderdb
+    environment:
+      SA_PASSWORD: "Password123!"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - orderdb_volume:/var/opt/mssql
+    ports:
+      - "1435:1433"
+
+  rabbitmq:
+    image: rabbitmq:3.13.3-management
+  catalog.api:
+    image: catalog_api_image
+    build:
+      context: .
+      dockerfile: Services/Catalog/FreeCourse.Services.Catalog.API/Dockerfile
+
+  identityserver.api:
+    image: identityserver_api_image
+    build:
+      context: .
+      dockerfile: IdentityServer/FreeCourse.IdentityServer/Dockerfile
+    container_name: identityserver.api
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=identitydb;Database=IdentityDb;User=sa;Password=Password123!;TrustServerCertificate=True"
+    depends_on:
+      - identitydb
+    ports:
+      - "5001:8080"
+
+volumes:
+  catalogdb_volume:
+  discountdb_volume:
+  identitydb_volume:
+  orderdb_volume:
