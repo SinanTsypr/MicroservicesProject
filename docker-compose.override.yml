@@ -14,7 +14,7 @@ services:
     ports:
       - "6379:6379"
 
-  discount:
+  discountdb:
     container_name: discountdb
     restart: always
     ports:
@@ -30,7 +30,7 @@ services:
     container_name: identitydb
     restart: always
     ports:
-      - "1434:1433"
+      - "1500:1433"
     volumes:
       - identitydb_volume:/var/opt/mssql
 
@@ -51,7 +51,7 @@ services:
       DatabaseSettings__ConnectionString: "mongodb://catalogdb:27017"
       ASPNETCORE_ENVIRONMENT: Development
       RabbitMQUrl: rabbitmq
-      IdentityServerURL: http://identityserver.api:5001
+      IdentityServerURL: http://identityserver.api
     ports:
       - "5011:8080"
     depends_on:
@@ -62,3 +62,65 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
     ports:
       - "5001:8080"
+
+  basket.api:
+    container_name: basket.api
+    environment:
+      RedisSettings__Port: 6379
+      RedisSettings__Host: basketdb
+      ASPNETCORE_ENVIRONMENT: Development
+      IdentityServerURL: http://identityserver.api
+    ports:
+      - "5013:8080"
+    depends_on:
+      - basketdb
+
+  photostock.api:
+    container_name: photostock.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      IdentityServerURL: http://identityserver.api
+    ports:
+      - "5012:8080"
+    volumes:
+      - type: bind
+        source: C:\Users\sinan\OneDrive\Masaüstü\photos
+        target: /app/wwwroot/photos
+
+  discount.api:
+    container_name: discount.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      IdentityServerURL: http://identityserver.api
+      ConnectionStrings__PostgreSql": "User ID=admin; Password=Password123!; Server=localhost; Port=5433; Database=discountdb;"
+    ports:
+      - "5014:8080"
+    depends_on:
+      - discountdb
+
+  fakepayment.api:
+    container_name: fakepayment.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      IdentityServerURL: http://identityserver.api
+      RabbitMQUrl: rabbitmq
+    ports:
+      - "5016:8080"
+
+  order.api:
+    container_name: order.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      IdentityServerURL: http://identityserver.api
+      RabbitMQUrl: rabbitmq
+      ConnectionStrings__DefaultConnection: "Server=orderdb;Database=OrderDb;User=sa;Password=Password123!;TrustServerCertificate=True"
+    ports:
+      - "5015:8080"
+
+  gateway.api:
+    container_name: gateway.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: production
+      IdentityServerURL: http://identityserver.api
+    ports:
+      - "5000:8080"
