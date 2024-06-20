@@ -22,9 +22,9 @@ services:
     volumes:
       - discountdb_volume:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=Password123!
-      - POSTGRES_DB=discountdb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: Password123!
+      POSTGRES_DB: discountdb
 
   identitydb:
     container_name: identitydb
@@ -36,7 +36,7 @@ services:
 
   orderdb:
     ports:
-      - "1435:1433"
+      - "1444:1433"
 
   rabbitmq:
     container_name: rabbitmq
@@ -51,7 +51,7 @@ services:
       DatabaseSettings__ConnectionString: "mongodb://catalogdb:27017"
       ASPNETCORE_ENVIRONMENT: Development
       RabbitMQUrl: rabbitmq
-      IdentityServerURL: http://identityserver.api
+      IdentityServerURL: http://identityserver.api:8080
     ports:
       - "5011:8080"
     depends_on:
@@ -69,7 +69,7 @@ services:
       RedisSettings__Port: 6379
       RedisSettings__Host: basketdb
       ASPNETCORE_ENVIRONMENT: Development
-      IdentityServerURL: http://identityserver.api
+      IdentityServerURL: http://identityserver.api:8080
     ports:
       - "5013:8080"
     depends_on:
@@ -79,7 +79,7 @@ services:
     container_name: photostock.api
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      IdentityServerURL: http://identityserver.api
+      IdentityServerURL: http://identityserver.api:8080
     ports:
       - "5012:8080"
     volumes:
@@ -91,18 +91,18 @@ services:
     container_name: discount.api
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      IdentityServerURL: http://identityserver.api
-      ConnectionStrings__PostgreSql": "User ID=admin; Password=Password123!; Server=localhost; Port=5433; Database=discountdb;"
-    ports:
-      - "5014:8080"
+      IdentityServerURL: http://identityserver.api:8080
+      ConnectionStrings__PostgreSql: "User ID=admin;Password=Password123!;Server=discountdb;Port=5433;Database=discountdb;"
     depends_on:
       - discountdb
+    ports:
+      - "5014:8080"
 
   fakepayment.api:
     container_name: fakepayment.api
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      IdentityServerURL: http://identityserver.api
+      IdentityServerURL: http://identityserver.api:8080
       RabbitMQUrl: rabbitmq
     ports:
       - "5016:8080"
@@ -111,7 +111,7 @@ services:
     container_name: order.api
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      IdentityServerURL: http://identityserver.api
+      IdentityServerURL: http://identityserver.api:8080
       RabbitMQUrl: rabbitmq
       ConnectionStrings__DefaultConnection: "Server=orderdb;Database=OrderDb;User=sa;Password=Password123!;TrustServerCertificate=True"
     ports:
@@ -121,6 +121,28 @@ services:
     container_name: gateway.api
     environment:
       ASPNETCORE_ENVIRONMENT: production
-      IdentityServerURL: http://identityserver.api
+      IdentityServerURL: http://identityserver.api:8080
     ports:
       - "5000:8080"
+
+  aspnetcoremvc.web:
+    container_name: aspnetcoremvc.web
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ServiceApiSettings__IdentityBaseUri: "http://identityserver.api:8080"
+      ServiceApiSettings__GatewayBaseUri: "http://gateway.api:8080"
+      ClientSettings__WebClient__ClientId: "WebMvcClient"
+      ClientSettings__WebClient__ClientSecrets: "secret"
+      ClientSettings__WebClientForUser__ClientId: "WebMvcClientForUser"
+      ClientSettings__WebClientForUser__ClientSecrets: "secret"
+    ports:
+      - "5010:8080"
+    depends_on:
+      - gateway.api
+      - identityserver.api
+      - catalog.api
+      - basket.api
+      - discount.api
+      - order.api
+      - photostock.api
+      - fakepayment.api

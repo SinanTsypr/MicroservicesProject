@@ -96,6 +96,13 @@ namespace FreeCourse.Services.Order.API
             app.UseAuthentication();
             app.UseAuthorization();
 
+            //Otomatik update-database
+            using (var scope = app.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                var orderDbContext = serviceProvider.GetRequiredService<OrderDbContext>();
+                orderDbContext.Database.Migrate();
+            }
 
             app.MapControllers();
 
